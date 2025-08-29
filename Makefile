@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -O2
 TARGET = resource-monitor
-SRC = resource-monitor-gui.c
+SRC = resource-monitor.c
 
 all: $(TARGET)
 $(TARGET): $(SRC)
