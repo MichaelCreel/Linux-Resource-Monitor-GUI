@@ -44,7 +44,6 @@ def update_stats():
         for text in ax.texts:
             text.set_color("white")
         canvas.draw()
-        canvas.get_tk_widget().pack()
 
     except Exception as e:
         cpu_label.config(text="Failure Reading CPU")
@@ -66,35 +65,57 @@ style.configure("cpu.Horizontal.TProgressbar", troughcolor="#ffffff", background
 style.configure("gpu.Horizontal.TProgressbar", troughcolor="#ffffff", background="#77FF00")
 
 cpu_bar = ttk.Progressbar(root, length=400, maximum=100, style="cpu.Horizontal.TProgressbar")
-cpu_bar.pack(pady=5, fill="x", expand=True)
+cpu_bar.pack(pady=5, fill="both", expand=True)
 cpu_label = tk.Label(root, **label_style)
-cpu_label.pack(pady=5, fill="x", expand=True)
+cpu_label.pack(pady=5, fill="both", expand=True)
 
 chart_frame = tk.Frame(root, bg="#06061b")
-chart_frame.pack(pady=5, fill="x", expand=True)
+chart_frame.pack(pady=5, fill="both", expand=True)
 memory_label = tk.Label(root, **label_style)
-memory_label.pack(pady=5, fill="x", expand=True)
+memory_label.pack(pady=5, fill="both", expand=True)
 
 gpu_bar = ttk.Progressbar(root, length=400, maximum=100, style="gpu.Horizontal.TProgressbar")
-gpu_bar.pack(pady=5, fill="x", expand=True)
+gpu_bar.pack(pady=5, fill="both", expand=True)
 gpu_label = tk.Label(root, **label_style)
-gpu_label.pack(pady=5, fill="x", expand=True)
+gpu_label.pack(pady=5, fill="both", expand=True)
 
-fig = Figure(figsize=(3.5, 3.5), dpi=100)
+fig = Figure(figsize=(4.5, 4.5), dpi=100)
 fig.patch.set_facecolor('#06061b')
 ax = fig.add_subplot(111)
 ax.set_facecolor('#06061b')
 canvas = FigureCanvasTkAgg(fig, master=chart_frame)
 canvas.get_tk_widget().pack(fill="both", expand=True)
 
+labels = [cpu_label, memory_label, gpu_label]
+
 update_stats()
 root.mainloop()
 
 def resize_fonts(event):
-    new_size = max(12, int(event.width / 40))
-    label_style["font"] = ("Helvetica", new_size)
-    cpu_label.config(font=label_style["font"])
-    memory_label.config(font=label_style["font"])
-    gpu_label.config(font=label_style["font"])
+    new_size = max(12, int(min(event.width, event.height) / 40))
+    new_font = ("Helvetica", new_size)
+    for label in labels:
+        label.config(font=new_font)
 
 root.bind("<Configure>", resize_fonts)
+chart_frame.bind("<Configure>", resize_chart)
+
+resize_timer = None
+
+def resize_chart(event):
+    global resize_timer
+    if resize_timer:
+        root.after_cancel(resize_timer)
+    resize_timer = root.after(100, lambda: _resize_chart(event))
+
+def _resize_chart(event):
+    width_in = event.width / fig.get_dpi()
+    height_in = event.height / fig.get_dpi()
+    fig.set_size_inches(width_in, height_in)
+    canvas.draw_idle()
+    font_size = max(8, int(min(event.width, event.height) / 50))
+    ax.set_title("Memory Usage", color="white", fontsize=font_size)
+
+    for text in ax.texts:
+        text.set_color("white")
+        text.set_fontsize(font_size)
