@@ -55,11 +55,17 @@ def update_stats():
 
 root = tk.Tk()
 root.configure(bg="#06061b")
-label_style = {"bg": "#06061b", "fg": "#ffffff", "font": ("Helvetica", 18)}
+label_style = {"bg": "#06061b", "fg": "#ffffff", "font": ("Helvetica", 12)}
 
 root.title("Resource Monitor")
 
-cpu_bar = ttk.Progressbar(root, length=400, height=200, maximum=100)
+style = ttk.Style()
+style.theme_use('clam')
+
+style.configure("cpu.Horizontal.TProgressbar", troughcolor="#ffffff", background="#FF6200")
+style.configure("gpu.Horizontal.TProgressbar", troughcolor="#ffffff", background="#77FF00")
+
+cpu_bar = ttk.Progressbar(root, length=400, maximum=100, style="cpu.Horizontal.TProgressbar")
 cpu_bar.pack(pady=10)
 cpu_label = tk.Label(root, **label_style)
 cpu_label.pack(pady=10)
@@ -69,12 +75,12 @@ chart_frame.pack(pady=10)
 memory_label = tk.Label(root, **label_style)
 memory_label.pack(pady=10)
 
-gpu_bar = ttk.Progressbar(root, length=400, height=200, maximum=100)
+gpu_bar = ttk.Progressbar(root, length=400, maximum=100, style="gpu.Horizontal.TProgressbar")
 gpu_bar.pack(pady=10)
 gpu_label = tk.Label(root, **label_style)
 gpu_label.pack(pady=10)
 
-fig = Figure(figsize=(5, 5), dpi=100)
+fig = Figure(figsize=(4, 4), dpi=100)
 fig.patch.set_facecolor('#06061b')
 ax = fig.add_subplot(111)
 ax.set_facecolor('#06061b')
