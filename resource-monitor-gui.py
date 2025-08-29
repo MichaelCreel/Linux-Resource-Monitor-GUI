@@ -40,7 +40,7 @@ def update_stats():
         free_gb = float(free.split(":")[1].split("GB")[0].strip())
         ax.clear()
         ax.pie([used_gb, free_gb], labels=["Used", "Free"], autopct='%1.1f%%', colors=["#ff6666", "#66b3ff"])
-        ax.set_title("Memory Usage", color="white")
+        ax.set_title("", color="white")
         for text in ax.texts:
             text.set_color("white")
         canvas.draw()
