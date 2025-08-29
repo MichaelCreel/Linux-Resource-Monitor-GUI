@@ -66,26 +66,35 @@ style.configure("cpu.Horizontal.TProgressbar", troughcolor="#ffffff", background
 style.configure("gpu.Horizontal.TProgressbar", troughcolor="#ffffff", background="#77FF00")
 
 cpu_bar = ttk.Progressbar(root, length=400, maximum=100, style="cpu.Horizontal.TProgressbar")
-cpu_bar.pack(pady=10)
+cpu_bar.pack(pady=5, fill="x", expand=True)
 cpu_label = tk.Label(root, **label_style)
-cpu_label.pack(pady=10)
+cpu_label.pack(pady=5, fill="x", expand=True)
 
 chart_frame = tk.Frame(root, bg="#06061b")
-chart_frame.pack(pady=10)
+chart_frame.pack(pady=5, fill="x", expand=True)
 memory_label = tk.Label(root, **label_style)
-memory_label.pack(pady=10)
+memory_label.pack(pady=5, fill="x", expand=True)
 
 gpu_bar = ttk.Progressbar(root, length=400, maximum=100, style="gpu.Horizontal.TProgressbar")
-gpu_bar.pack(pady=10)
+gpu_bar.pack(pady=5, fill="x", expand=True)
 gpu_label = tk.Label(root, **label_style)
-gpu_label.pack(pady=10)
+gpu_label.pack(pady=5, fill="x", expand=True)
 
-fig = Figure(figsize=(4, 4), dpi=100)
+fig = Figure(figsize=(3.5, 3.5), dpi=100)
 fig.patch.set_facecolor('#06061b')
 ax = fig.add_subplot(111)
 ax.set_facecolor('#06061b')
 canvas = FigureCanvasTkAgg(fig, master=chart_frame)
-canvas.get_tk_widget().pack()
+canvas.get_tk_widget().pack(fill="both", expand=True)
 
 update_stats()
 root.mainloop()
+
+def resize_fonts(event):
+    new_size = max(12, int(event.width / 40))
+    label_style["font"] = ("Helvetica", new_size)
+    cpu_label.config(font=label_style["font"])
+    memory_label.config(font=label_style["font"])
+    gpu_label.config(font=label_style["font"])
+
+root.bind("<Configure>", resize_fonts)
