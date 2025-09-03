@@ -20,7 +20,7 @@ A graphical Resource Monitor designed for Linux systems. Displays the average CP
    git clone https://github.com/MichaelCreel/Linux-Resource-Monitor-GUI
 4. Open app directory
    ```bash
-   cd Linux-Resource-Monitor-GUI
+   cd ~/Linux-Resource-Monitor-GUI/
 5. Run app
    ```bash
    python3 resource-monitor-gui.py
