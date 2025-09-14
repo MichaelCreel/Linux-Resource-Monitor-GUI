@@ -60,6 +60,9 @@ label_style = {"bg": "#06061b", "fg": "#ffffff"}
 
 shared_font = tkFont.Font(family="Helvetica", size=12)
 
+main_frame = tk.Frame(root, bg="#06061b")
+main_frame.pack(pady=15, padx=15, fill="both", expand=True)
+
 root.title("Resource Monitor")
 
 style = ttk.Style()
@@ -68,19 +71,19 @@ style.theme_use('clam')
 style.configure("cpu.Horizontal.TProgressbar", troughcolor="#ffffff", background="#FF6200")
 style.configure("gpu.Horizontal.TProgressbar", troughcolor="#ffffff", background="#77FF00")
 
-cpu_bar = ttk.Progressbar(root, length=400, maximum=100, style="cpu.Horizontal.TProgressbar")
+cpu_bar = ttk.Progressbar(main_frame, length=400, maximum=100, style="cpu.Horizontal.TProgressbar")
 cpu_bar.pack(pady=5, fill="both", expand=True)
-cpu_label = tk.Label(root, font=shared_font, **label_style)
+cpu_label = tk.Label(main_frame, font=shared_font, **label_style)
 cpu_label.pack(pady=5, fill="both", expand=True)
 
-chart_frame = tk.Frame(root, bg="#06061b")
+chart_frame = tk.Frame(main_frame, bg="#06061b")
 chart_frame.pack(pady=5, fill="both", expand=True)
-memory_label = tk.Label(root, font=shared_font, **label_style)
+memory_label = tk.Label(main_frame, font=shared_font, **label_style)
 memory_label.pack(pady=5, fill="both", expand=True)
 
-gpu_bar = ttk.Progressbar(root, length=400, maximum=100, style="gpu.Horizontal.TProgressbar")
+gpu_bar = ttk.Progressbar(main_frame, length=400, maximum=100, style="gpu.Horizontal.TProgressbar")
 gpu_bar.pack(pady=5, fill="both", expand=True)
-gpu_label = tk.Label(root, font=shared_font, **label_style)
+gpu_label = tk.Label(main_frame, font=shared_font, **label_style)
 gpu_label.pack(pady=5, fill="both", expand=True)
 
 fig = Figure(figsize=(4.5, 4.5), dpi=100)
@@ -112,7 +115,7 @@ font_resize_timer = None
 
 latest_event = None
 
-def resize_attempt(event=None):
+def resize(event=None):
     global fs
 
     width = root.winfo_width()
@@ -123,7 +126,10 @@ def resize_attempt(event=None):
     fs = min(a, b)
     shared_font.configure(size=max(12, int(fs / 40)))
 
-root.bind("<Configure>", resize_attempt)
+    pad = max(15, int(fs / 8))
+    main_frame.pack_configure(padx=pad, pady=pad/1.5)
+
+root.bind("<Configure>", resize)
 
 update_stats()
 root.mainloop()
