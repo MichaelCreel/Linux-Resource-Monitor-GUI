@@ -19,11 +19,11 @@ def update_stats():
         used = next((line for line in lines if "Used Memory" in line), "Used Memory: N/A")
         free = next((line for line in lines if "Free Memory" in line), "Free Memory: N/A")
         total = next((line for line in lines if "Total Memory" in line), "Total Memory: N/A")
-        memory_label.config(text=f"{used}\n{free}\n{total}", font=shared_font)
+        memory_label.config(text=f"{used}\n{free}\n{total}")
         gpu = next((line for line in lines if "GPU Usage" in line), "GPU Usage: N/A")
 
-        cpu_label.config(text=cpu, font=shared_font)
-        gpu_label.config(text=gpu, font=shared_font)
+        cpu_label.config(text=cpu)
+        gpu_label.config(text=gpu)
 
         if "CPU Usage" in cpu and "%" in cpu:
             cpu_percent = float(cpu.split(":")[1].strip().replace("%", ""))
@@ -37,15 +37,14 @@ def update_stats():
         else:
             gpu_bar['value'] = 0
 
-
         used_gb = float(used.split("(")[1].replace("GB)", "").strip())
         free_gb = float(free.split(":")[1].split("GB")[0].strip())
         ax.clear()
         ax.pie([used_gb, free_gb], labels=["Used", "Free"], autopct='%1.1f%%', colors=["#ff6666", "#66b3ff"])
-        ax.set_title("", color="white", fontsize=chart_font_size)
+        ax.set_title("", color="white", fontsize=shared_font.actual('size')/1.5)
         for text in ax.texts:
             text.set_color("white")
-            text.set_fontsize(chart_font_size)
+            text.set_fontsize(shared_font.actual('size')/1.5)
         canvas.draw()
 
     except Exception as e:
@@ -107,15 +106,24 @@ def _resize_chart(event):
     fig.set_size_inches(width_in, height_in)
     canvas.draw_idle()
 
-
-def resize_fonts(event):
-    new_size = max(12, int(min(event.width, event.height) / 50))
-    shared_font.configure(size=new_size)
-
-root.bind("<Configure>", resize_fonts)
-chart_frame.bind("<Configure>", resize_chart)
-
 resize_timer = None
+
+font_resize_timer = None
+
+latest_event = None
+
+def resize_attempt(event=None):
+    global fs
+
+    width = root.winfo_width()
+    height = root.winfo_height()
+
+    a = int(height / 2)
+    b = int(width / 2)
+    fs = min(a, b)
+    shared_font.configure(size=max(12, int(fs / 40)))
+
+root.bind("<Configure>", resize_attempt)
 
 update_stats()
 root.mainloop()
