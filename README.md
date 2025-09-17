@@ -1,6 +1,6 @@
 # Resource Monitor
 
-A graphical Resource Monitor designed for Linux systems. Displays the average CPU usage over all cores, memory usage, and GPU usage. Based on my terminal-based Resource-Monitor
+A graphical Resource Monitor designed for Linux systems. Displays the average CPU usage over all cores, memory usage, and GPU usage. Based on my C-based terminal version, [Linux Resource Monitor](https://github.com/MichaelCreel/Linux-Resource-Monitor).
 
 ## Dependencies
 
@@ -30,6 +30,7 @@ A graphical Resource Monitor designed for Linux systems. Displays the average CP
 - If GPU tools are not found, your GPU usage will remain undetected
 - Designed for Debian
 - Root access required for intel_gpu_top
+- Tested with an NVIDIA graphics card
 
 ## License
 MIT License
